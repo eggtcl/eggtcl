@@ -1,0 +1,3 @@
+The "unapproved" directory will contain scripts waiting for approval from another member.
+
+To approve a script, simply move it up a level into the main scripts directory and commit the change.
