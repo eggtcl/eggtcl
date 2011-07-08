@@ -1,3 +1,5 @@
-The "unapproved" directory will contain scripts waiting for approval from another member.
+Add your scripts to this "unapproved" directory.
 
-To approve a script, simply move it up a level into the main scripts directory and commit the change.
+Once added, get another member to follow these instructions:
+
+See http://code.google.com/p/eggtcl/wiki/Approval
