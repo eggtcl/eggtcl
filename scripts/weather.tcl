@@ -1,4 +1,4 @@
-# weather.tcl -- 2.2
+# weather.tcl -- 2.2.1
 #
 #   Returns the current weather for the city or postcode using the iGoogle
 #    API for weather.
@@ -7,7 +7,7 @@
 #
 # Name: Weather Lookup
 # Author: HM2K <irc@hm2k.org>
-# License: http://www.opensource.org/licenses/bsd-license.php BSD License
+# License: http://www.opensource.org/licenses/bsd-license.php The BSD 2-Clause License
 # Link: http://www.hm2k.com/posts/weather-tcl
 # Labels: weather, lookup, google, api
 # Updated: 08-Jul-2011
@@ -18,6 +18,7 @@
 #        W at 9 mph
 #
 ###Revisions
+# 2.2.1	- Improved removing of temperature unit flag from argument
 # 2.2	- Uses setudef
 #	- Uses namespace
 #	- Added init and deinit procs
@@ -53,7 +54,7 @@
 # Namespace
 namespace eval ::wz {
 	variable version
-	set version "2.2"; #current version of this script
+	set version "2.2.1"; #current version of this script
 	
 	variable wz
 	# Default settings
@@ -61,7 +62,7 @@ namespace eval ::wz {
 	set wz(cmd) ".wz"; #public command trigger
 	set wz(dcccmd) "wz"; #dcc command trigger
 	set wz(prefix) "* Weather:"; #output prefix
-	set wz(temp) "C"; # temperature scale [C/F]
+	set wz(tempu) "C"; # temperature unit [C/F]
 	set wz(output) "\002%s:\002 %s, %sº%s %s %s"; #format for the output
 	set wz(problem) "Problem:";
 	set wz(errormsg) "Error: No information could be found for";
@@ -143,15 +144,16 @@ proc ::wz::dcc {ha idx arg} {
 
 proc ::wz::get { arg } {
 	variable wz
+	set tempu $wz(tempu)
 	set tempf [lsearch [string tolower $arg] "-f"]
-	set tempc [lsearch [string tolower $arg] "-c"]
 	if {$tempf >-1} {
-		set arg [string map {-f "" -F ""} $arg]
-		set wz(temp) "F"
+		set arg [lreplace $arg $tempf $tempf]
+		set tempu "F"
 	}
+	set tempc [lsearch [string tolower $arg] "-c"]
 	if {$tempc >-1} {
-		set arg [string map {-c "" -C ""} $arg]
-		set wz(temp) "C"
+		set arg [lreplace $arg $tempc $tempc]
+		set tempu "C"
 	}
 
 	set query [::http::formatQuery weather $arg hl $wz(lang)]
@@ -168,7 +170,7 @@ proc ::wz::get { arg } {
 	#set data [::wz::parse $data "forecast_information"][::wz::parse $data "current_conditions"]
 	::http::cleanup $http
 
-	set temp [expr {([string tolower $wz(temp)] == "f")?"temp_f":"temp_c"}]
+	set temp [expr {([string tolower $wz(tempu)] == "f")?"temp_f":"temp_c"}]
   
 	set info(city) [::wz::parsedata $data city]
 	set info(condition) [::wz::parsedata $data condition]
@@ -184,7 +186,7 @@ proc ::wz::get { arg } {
 		return "$wz(errormsg) $arg"
 	}
 
-	return [format $wz(output) $info(city) $info(condition) $info(temp) $wz(temp) $info(humidity) $info(wind)]
+	return [format $wz(output) $info(city) $info(condition) $info(temp) $tempu $info(humidity) $info(wind)]
 }
 
 proc ::wz::parse { data arg } {
