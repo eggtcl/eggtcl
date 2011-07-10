@@ -24,7 +24,7 @@
 # License: http://www.opensource.org/licenses/ISC ISC license
 # Labels: substitute, substitution, text, sed, regex
 # Updated: 02-May-2010
-# RCS: $Id$
+# RCS: $Id: substitute.tcl 22 2011-07-08 18:07:27Z rutgren@gmail.com $
 #
 ###Usage
 # Basic usage
