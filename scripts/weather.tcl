@@ -3,7 +3,7 @@
 #   Returns the current weather for the city or postcode using the iGoogle
 #    API for weather.
 #
-# Copyright (c) 2011 HM2K
+# Copyright (c) 2011 HM2K, the eggtcl project
 #
 # Name: Weather Lookup
 # Author: HM2K <irc@hm2k.org>
@@ -76,7 +76,7 @@ namespace eval ::wz {
 
 	# Settings file
 	if {[catch {source scripts/weather.settings.tcl} err]} {
-	  putlog "Warning: 'weather.settings.tcl' was not loaded";
+	  putlog "Warning: 'weather.settings.tcl' was not loaded"
 	}
 }
 
@@ -100,7 +100,7 @@ proc ::wz::init {args} {
 		putlog "Tcllib is required, see http://wiki.tcl.tk/12099";
 	}
 	# User defined channel flag
-	setudef flag weather;
+	setudef flag weather
 	# Binds
 	bind pub - $wz(cmd) [namespace current]::pub
 	bind dcc -|- $wz(dcccmd) [namespace current]::dcc
@@ -131,6 +131,7 @@ proc ::wz::pub { nick uhost hand chan arg } {
 	putserv "PRIVMSG $chan :$nick, $wz(prefix) $result"
 }
 
+# DCC command
 proc ::wz::dcc {ha idx arg} {
 	variable wz
 	set arg [split $arg]
@@ -142,6 +143,7 @@ proc ::wz::dcc {ha idx arg} {
 	putdcc $idx $result
 }
 
+# Get
 proc ::wz::get { arg } {
 	variable wz
 	set tempu $wz(tempu)
@@ -189,6 +191,7 @@ proc ::wz::get { arg } {
 	return [format $wz(output) $info(city) $info(condition) $info(temp) $tempu $info(humidity) $info(wind)]
 }
 
+# Parse
 proc ::wz::parse { data arg } {
 	set arg [string tolower $arg]
 	set matched ""
@@ -197,6 +200,7 @@ proc ::wz::parse { data arg } {
 	return $result
 }
 
+# Parse data
 proc ::wz::parsedata { data arg } {
 	set arg [string tolower $arg]
 	set matched ""
@@ -205,6 +209,7 @@ proc ::wz::parsedata { data arg } {
 	return $result
 }
 
+# HTML Escape
 proc ::wz::mapEscapes {data} {
 	if {[info commands ::htmlparse::mapEscapes] == ""} {
 		putlog "Invalid command name \"::htmlparse::mapEscapes\""
