@@ -76,7 +76,7 @@ namespace eval ::wz {
 
 	# Settings file
 	if {[catch {source scripts/weather.settings.tcl} err]} {
-	  putlog "Warning: 'weather.settings.tcl' was not loaded"
+	  #putlog "Warning: 'weather.settings.tcl' was not loaded"
 	}
 }
 
@@ -127,7 +127,7 @@ proc ::wz::pub { nick uhost hand chan arg } {
 		putserv "NOTICE $nick :$wz(usage)"
 		return
 	}
-	set result [wz:get $arg]
+	set result [::wz::get $arg]
 	putserv "PRIVMSG $chan :$nick, $wz(prefix) $result"
 }
 
